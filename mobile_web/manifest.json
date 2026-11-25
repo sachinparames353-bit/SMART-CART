@@ -1,0 +1,16 @@
+{
+  "name": "Supermarket Smart Billing",
+  "short_name": "SmartBilling",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#172B4D",
+  "theme_color": "#172B4D",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230265D2'/><text x='50' y='65' font-size='45' font-weight='bold' fill='white' text-anchor='middle'>SB</text></svg>",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
