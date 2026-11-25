@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supermarket Smart Billing</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body {
+      background: #E8EEF5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 10px;
+    }
+    .phone-container {
+      width: 100%;
+      max-width: 420px;
+      min-height: 90vh;
+      background: #F6F8FB;
+      border-radius: 28px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.18);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 8px solid #1E293B;
+    }
+    .status-bar {
+      background: #172B4D;
+      color: white;
+      font-size: 12px;
+      padding: 6px 16px;
+      display: flex;
+      justify-content: space-between;
+      font-weight: 500;
+    }
+    .content {
+      padding: 20px 18px 24px;
+      flex: 1;
+      overflow-y: auto;
+    }
+    h1 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #172B4D;
+      margin-bottom: 4px;
+    }
+    .subtitle {
+      font-size: 13.5px;
+      color: #5E6C84;
+      margin-bottom: 16px;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: #0265D2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: background 0.15s;
+    }
+    .btn:hover { background: #0052CC; }
+    .btn:active { background: #0747A6; }
+    .btn-pay {
+      background: #087443;
+      margin-top: 10px;
+    }
+    .btn-pay:hover { background: #065b34; }
+    input[type="text"] {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid #DFE1E6;
+      border-radius: 8px;
+      font-size: 14.5px;
+      margin-bottom: 8px;
+      outline: none;
+      background: white;
+    }
+    input[type="text"]:focus {
+      border-color: #0265D2;
+    }
+    .status-msg {
+      font-size: 13px;
+      color: #344563;
+      background: #EBECF0;
+      padding: 10px 12px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      border-left: 4px solid #0265D2;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #172B4D;
+      margin: 12px 0 8px;
+    }
+    .cart-list {
+      background: white;
+      border-radius: 10px;
+      padding: 10px 14px;
+      border: 1px solid #E2E8F0;
+      min-height: 80px;
+    }
+    .cart-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    .cart-item:last-child { border-bottom: none; }
+    .cart-item-info {
+      font-size: 14px;
+      color: #1E293B;
+      line-height: 1.4;
+    }
+    .cart-item-price {
+      font-size: 12.5px;
+      color: #64748B;
+    }
+    .btn-qty {
+      background: #F1F5F9;
+      color: #0F172A;
+      border: 1px solid #CBD5E1;
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-qty:hover { background: #E2E8F0; }
+    .empty-cart {
+      color: #94A3B8;
+      font-size: 13.5px;
+      text-align: center;
+      padding: 20px 0;
+    }
+    .total-banner {
+      font-size: 20px;
+      font-weight: 800;
+      color: #087443;
+      padding: 16px 0 8px;
+    }
+    .demo-note {
+      font-size: 11.5px;
+      color: #64748B;
+      line-height: 1.4;
+      margin-top: 14px;
+    }
+    .quick-bar {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .chip {
+      background: #E2E8F0;
+      color: #334155;
+      font-size: 11.5px;
+      padding: 4px 8px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      border: none;
+    }
+    .chip:hover { background: #CBD5E1; }
+    /* Modal dialog */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+    .modal-card {
+      background: white;
+      max-width: 360px;
+      width: 100%;
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #0F172A;
+    }
+    .modal-body {
+      font-family: monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+      color: #334155;
+      background: #F8FAFC;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px dashed #CBD5E1;
+      max-height: 260px;
+      overflow-y: auto;
+      margin-bottom: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="phone-container">
+  <div class="status-bar">
+    <span>12:00</span>
+    <span>4G &bull; 100%</span>
+  </div>
+
+  <div class="content">
+    <h1>Supermarket Smart Billing</h1>
+    <div class="subtitle">Scan products, track your bill and shop smarter.</div>
+
+    <button class="btn" onclick="startScanner()">Scan QR Code</button>
+
+    <div class="quick-bar">
+      <span style="font-size:11px; color:#64748B; align-self:center;">Simulate Scan:</span>
+      <button class="chip" onclick="simulateScan('P101')">Milk (P101)</button>
+      <button class="chip" onclick="simulateScan('P102')">Bread (P102)</button>
+      <button class="chip" onclick="simulateScan('P103')">Rice (P103)</button>
+      <button class="chip" onclick="simulateScan('P104')">Pasta (P104)</button>
+      <button class="chip" onclick="simulateScan('P105')">Soap (P105)</button>
+    </div>
+
+    <input type="text" id="searchInput" placeholder="Search product (e.g. Pasta)" onkeydown="if(event.key==='Enter') searchProduct()">
+    <button class="btn" style="background:#4B5563;" onclick="searchProduct()">Search product</button>
+
+    <div class="status-msg" id="statusText">Try product IDs: P101, P102, P103, P104 or P105</div>
+
+    <div class="section-title">Your cart</div>
+    <div class="cart-list" id="cartLayout">
+      <div class="empty-cart">Your cart is empty.</div>
+    </div>
+
+    <div class="total-banner" id="totalText">Total: ₹0.00</div>
+    <button class="btn btn-pay" onclick="checkout()">Confirm and pay (demo)</button>
+
+    <div class="demo-note">
+      Product finder: search for an item to see its aisle. RFID hardware and live payment are not connected in this demo.
+    </div>
+  </div>
+</div>
+
+<!-- Receipt Modal -->
+<div class="modal-overlay" id="receiptModal">
+  <div class="modal-card">
+    <div class="modal-title">Digital receipt</div>
+    <div class="modal-body" id="receiptContent"></div>
+    <button class="btn" style="margin-bottom:0;" onclick="closeModal()">Done</button>
+  </div>
+</div>
+
+<script>
+  const products = {
+    "P101": { id: "P101", name: "Milk 500 ml", price: 30, aisle: "Aisle 1" },
+    "P102": { id: "P102", name: "Bread", price: 40, aisle: "Aisle 2" },
+    "P103": { id: "P103", name: "Rice 1 kg", price: 65, aisle: "Aisle 3" },
+    "P104": { id: "P104", name: "Pasta", price: 55, aisle: "Aisle 3" },
+    "P105": { id: "P105", name: "Soap", price: 35, aisle: "Aisle 4" }
+  };
+
+  const cart = {};
+
+  const formatter = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' });
+
+  function setStatus(msg) {
+    document.getElementById('statusText').innerText = msg;
+  }
+
+  function simulateScan(code) {
+    addProduct(code);
+  }
+
+  function startScanner() {
+    const input = prompt("Scan QR code:\nEnter QR Product Code (e.g. P101, P102, P103, P104, P105):", "P104");
+    if (input) {
+      addProduct(input.trim().toUpperCase());
+    } else {
+      setStatus("QR scan cancelled.");
+    }
+  }
+
+  function searchProduct() {
+    const query = document.getElementById('searchInput').value.trim().toLowerCase();
+    if (!query) {
+      setStatus("Enter a product name.");
+      return;
+    }
+    for (const id in products) {
+      const p = products[id];
+      if (p.name.toLowerCase().includes(query)) {
+        setStatus(`${p.name} is located in ${p.aisle}.`);
+        addProduct(p.id);
+        return;
+      }
+    }
+    setStatus("Product not found. Try Milk, Bread, Rice, Pasta or Soap.");
+  }
+
+  function addProduct(id) {
+    const p = products[id];
+    if (!p) {
+      setStatus(`Unknown product code: ${id}. Use P101-P105.`);
+      return;
+    }
+    cart[id] = (cart[id] || 0) + 1;
+    setStatus(`${p.name} added. Location: ${p.aisle}`);
+    renderCart();
+  }
+
+  function removeProduct(id) {
+    if (!cart[id]) return;
+    if (cart[id] <= 1) {
+      delete cart[id];
+    } else {
+      cart[id] -= 1;
+    }
+    renderCart();
+  }
+
+  function renderCart() {
+    const layout = document.getElementById('cartLayout');
+    layout.innerHTML = '';
+    const keys = Object.keys(cart);
+    let total = 0;
+
+    if (keys.length === 0) {
+      layout.innerHTML = '<div class="empty-cart">Your cart is empty.</div>';
+      document.getElementById('totalText').innerText = `Total: ${formatter.format(0)}`;
+      return;
+    }
+
+    keys.forEach(id => {
+      const p = products[id];
+      const qty = cart[id];
+      total += p.price * qty;
+
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'cart-item';
+      itemDiv.innerHTML = `
+        <div class="cart-item-info">
+          <strong>${p.name}</strong> &times; ${qty}<br>
+          <span class="cart-item-price">${formatter.format(p.price)} each</span>
+        </div>
+        <button class="btn-qty" onclick="removeProduct('${id}')">&minus;</button>
+      `;
+      layout.appendChild(itemDiv);
+    });
+
+    document.getElementById('totalText').innerText = `Total: ${formatter.format(total)}`;
+  }
+
+  function checkout() {
+    const keys = Object.keys(cart);
+    if (keys.length === 0) {
+      setStatus("Add at least one product before checkout.");
+      return;
+    }
+    let total = 0;
+    let receipt = "SMART BILLING RECEIPT\n--------------------------------\n";
+    keys.forEach(id => {
+      const p = products[id];
+      const qty = cart[id];
+      const lineTotal = p.price * qty;
+      total += lineTotal;
+      receipt += `${p.name} x ${qty} = ${formatter.format(lineTotal)}\n`;
+    });
+    receipt += "--------------------------------\n";
+    receipt += `TOTAL: ${formatter.format(total)}\n\n`;
+    receipt += "Demo checkout only.\nNo real payment was processed.";
+
+    document.getElementById('receiptContent').innerText = receipt;
+    document.getElementById('receiptModal').style.display = 'flex';
+  }
+
+  function closeModal() {
+    for (const key in cart) delete cart[key];
+    renderCart();
+    setStatus("Demo order completed. Thank you!");
+    document.getElementById('receiptModal').style.display = 'none';
+  }
+</script>
+</body>
+</html>

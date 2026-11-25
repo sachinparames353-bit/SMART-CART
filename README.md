@@ -1,5 +1,9 @@
 # 🛒 SMART-CART : Supermarket Autonomous Billing & Navigation System
 
+> ### 🚀 [**CLICK HERE TO OPEN THE LIVE APP DEMO**](https://sachinparames353-bit.github.io/SMART-CART/)
+> *Experience the full interactive supermarket self-checkout & aisle navigation app directly in your browser (no installation required!)*
+
+[![Live Demo](https://img.shields.io/badge/Demo-Open_Live_App-2EA44F?style=for-the-badge&logo=googlechrome&logoColor=white)](https://sachinparames353-bit.github.io/SMART-CART/)
 [![Android](https://img.shields.io/badge/Platform-Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://developer.android.com/)
 [![Java](https://img.shields.io/badge/Language-Java_17-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.java.com/)
 [![ML Kit](https://img.shields.io/badge/Scanner-Google_ML_Kit-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://developers.google.com/ml-kit)
